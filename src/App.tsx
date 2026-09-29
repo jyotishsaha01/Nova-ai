@@ -340,7 +340,9 @@ function MainStudio() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: historyPayload,
+          messages: useAgenticRun
+            ? [...historyPayload.slice(-9).map(({ role, content: historyContent }) => ({ role, content: historyContent })), { role: "user", content }]
+            : historyPayload,
           model,
           provider,
           maxResponseTokens,
@@ -435,7 +437,11 @@ function MainStudio() {
         }
       }
     } catch (err: any) {
-      if (err.name !== "AbortError") {
+      if (err.name === "AbortError") {
+        const activeStep = capturedToolCalls.findIndex((step) => step.status === "running");
+        if (activeStep >= 0) capturedToolCalls[activeStep] = { ...capturedToolCalls[activeStep], status: "failed", detail: "Stopped by you." };
+        streamedText = streamedText ? `${streamedText}\n\n*Run stopped by you.*` : "Run stopped by you.";
+      } else {
         console.error("Stream error:", err);
         streamedText += `\n\n*(Inference interrupted: ${err.message || "Network error"})*`;
       }

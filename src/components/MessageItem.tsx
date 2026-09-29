@@ -152,7 +152,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
 
           {/* Assistant Thinking / Reasoning Inspector */}
           {!isUser && (
-            message.toolCalls?.length ? <AgentActivity steps={message.toolCalls} /> : <ThinkingInspector
+            message.toolCalls?.length ? <AgentActivity steps={message.toolCalls} isRunning={Boolean(message.isStreaming)} wasCancelled={message.content.startsWith("Run stopped by you.")} /> : <ThinkingInspector
                 thoughtText={message.thought}
                 isStreaming={message.isStreaming}
               />

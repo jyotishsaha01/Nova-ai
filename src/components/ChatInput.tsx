@@ -208,7 +208,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
-            placeholder={agenticMode ? "Describe a task — Nova will plan the work and show each step" : "Ask Nova anything — compare models, research, write, or create"}
+            placeholder={agenticMode ? "Describe your goal — Nova will plan steps and use its tools" : "Ask Nova anything — compare models, research, write, or create"}
             rows={1}
             className="w-full pt-3.5 pb-2 px-4 bg-transparent text-zinc-100 placeholder-zinc-500 text-sm focus:outline-none resize-none leading-relaxed max-h-56 select-text"
           />
@@ -259,7 +259,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                     ? "bg-violet-500/15 border-violet-400/40 text-violet-200 shadow-xs"
                     : "bg-zinc-900/60 border-zinc-800/80 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-850"
                 }`}
-                title="Plan and execute a bounded multi-step run with visible progress"
+                title="Plan a task, use Nova tools, and follow live progress"
               >
                 <Bot className="w-3.5 h-3.5" />
                 <span>Agent</span>

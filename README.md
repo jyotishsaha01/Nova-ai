@@ -36,7 +36,7 @@ The settings panel lets the user select a provider and model, and set an output 
 
 ## Agent runs
 
-Turn on **Agent** beside the chat composer to ask Nova to plan a task, work through up to three steps with the selected configured provider, and synthesize a final result. The activity panel shows step status and short results as the run progresses. Agent runs can use retrieved Nova library passages and, when Google Gemini is selected with Search enabled, Google Search grounding. This is a bounded model orchestration workflow; it does not execute arbitrary code, edit a connected repository, or perform external actions.
+Turn on **Agent** beside the chat composer to give Nova a bounded, multi-step task. It uses recent chat context to create a structured plan, chooses from its available tools, runs each step, and synthesizes a checked response. The activity panel shows live step and tool results. Built-in tools include a deterministic calculator, retrieval from the Nova knowledge library, and Google Search grounding when Gemini and Search are selected. Nova does not run shell commands, edit a connected repository, or perform external actions; those capabilities are not exposed by this web app.
 
 RAG uses Cloudflare embeddings when configured, Gemini embeddings when available, and deterministic local feature vectors as a no-key fallback. Nova writes authenticated conversations to the `novaSessions` Firestore subcollection so they are separate from the legacy app's `sessions` collection.
 

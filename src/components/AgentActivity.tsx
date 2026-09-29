@@ -4,16 +4,19 @@ import { ToolCallItem } from "../types";
 
 interface AgentActivityProps {
   steps: ToolCallItem[];
+  isRunning: boolean;
+  wasCancelled?: boolean;
 }
 
-export const AgentActivity: React.FC<AgentActivityProps> = ({ steps }) => {
+export const AgentActivity: React.FC<AgentActivityProps> = ({ steps, isRunning, wasCancelled = false }) => {
   const [isOpen, setIsOpen] = useState(true);
   if (!steps.length) return null;
 
-  const completed = steps.filter((step) => step.status === "completed").length;
-  const active = steps.find((step) => step.status === "running");
+  const active = isRunning ? steps.find((step) => step.status === "running") : undefined;
   const failed = steps.some((step) => step.status === "failed");
-  const finished = !active && steps.every((step) => step.status === "completed" || step.status === "failed");
+  const finished = !isRunning;
+  const resolved = steps.filter((step) => step.status === "completed" || step.status === "failed").length;
+  const runStatus = isRunning ? "running" : failed ? "failed" : "complete";
 
   return (
     <section className="nova-agent-activity mb-3 overflow-hidden rounded-xl border text-xs shadow-sm backdrop-blur" aria-label="Agent run activity">
@@ -27,14 +30,14 @@ export const AgentActivity: React.FC<AgentActivityProps> = ({ steps }) => {
           <span className="nova-agent-activity__icon flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"><Bot className="h-4 w-4" /></span>
           <span className="min-w-0">
             <span className="nova-agent-activity__title block font-semibold">Agent activity</span>
-            <span className="nova-agent-activity__summary mt-0.5 block truncate text-[11px]">
-              {active ? active.name : `${completed} of ${steps.length} steps complete`}
+            <span className="nova-agent-activity__summary mt-0.5 block truncate text-[11px]" role="status" aria-live="polite">
+              {active ? active.name : `${resolved} of ${steps.length} steps finished`}
             </span>
           </span>
         </span>
-        <span className={`nova-agent-activity__status nova-agent-activity__status--${active ? "running" : finished && failed ? "failed" : finished ? "complete" : "pending"} flex shrink-0 items-center gap-2 text-[11px]`}>
-          {active ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : finished && failed ? <X className="h-3.5 w-3.5" /> : finished ? <Check className="h-3.5 w-3.5" /> : <Circle className="h-3 w-3" />}
-          <span>{active ? "Working" : finished && failed ? "Stopped" : finished ? "Finished" : "Queued"}</span>
+        <span className={`nova-agent-activity__status nova-agent-activity__status--${runStatus} flex shrink-0 items-center gap-2 text-[11px]`}>
+          {isRunning ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : failed ? <X className="h-3.5 w-3.5" /> : finished ? <Check className="h-3.5 w-3.5" /> : <Circle className="h-3 w-3" />}
+          <span>{isRunning ? "Working" : wasCancelled ? "Stopped" : failed ? "Finished with an issue" : finished ? "Finished" : "Queued"}</span>
           <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
         </span>
       </button>
