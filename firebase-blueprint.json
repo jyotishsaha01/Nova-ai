@@ -1,0 +1,99 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account profile information",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "email"]
+    },
+    "ChatSession": {
+      "title": "ChatSession",
+      "description": "An interactive agent chat session",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "agentMode": { "type": "string" },
+        "model": { "type": "string" },
+        "enableSearch": { "type": "boolean" },
+        "enableRag": { "type": "boolean" },
+        "thinkingLevel": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["id", "userId", "title"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Individual message within a chat session",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sessionId": { "type": "string" },
+        "role": { "type": "string" },
+        "content": { "type": "string" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["id", "sessionId", "role", "content"]
+    },
+    "RagDocument": {
+      "title": "RagDocument",
+      "description": "Ingested document in the RAG knowledge base",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "content": { "type": "string" },
+        "chunkCount": { "type": "number" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["id", "userId", "title", "content"]
+    },
+    "RagChunk": {
+      "title": "RagChunk",
+      "description": "Semantic chunk with vector embedding",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "docId": { "type": "string" },
+        "userId": { "type": "string" },
+        "text": { "type": "string" },
+        "index": { "type": "number" },
+        "embedding": { "type": "array" }
+      },
+      "required": ["id", "docId", "userId", "text"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document"
+    },
+    "/users/{userId}/sessions/{sessionId}": {
+      "schema": "ChatSession",
+      "description": "User chat sessions"
+    },
+    "/users/{userId}/sessions/{sessionId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Chat messages in session"
+    },
+    "/users/{userId}/ragDocuments/{docId}": {
+      "schema": "RagDocument",
+      "description": "Knowledge documents for RAG"
+    },
+    "/users/{userId}/ragChunks/{chunkId}": {
+      "schema": "RagChunk",
+      "description": "Semantic chunks with embeddings"
+    }
+  }
+}

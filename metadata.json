@@ -1,0 +1,6 @@
+{
+  "name": "Nova: Multi-Model AI Workspace",
+  "description": "Nova is a multi-model AI workspace with provider routing, quota-aware fallback, long responses, deep research, and retrieval-augmented chat.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

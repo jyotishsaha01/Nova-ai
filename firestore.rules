@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Connection testing
+    match /test/connection {
+      allow read, write: if true;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      // Chat sessions subcollection
+      match /sessions/{sessionId} {
+        allow read, write: if isOwner(userId);
+
+        // Messages subcollection
+        match /messages/{messageId} {
+          allow read, write: if isOwner(userId);
+        }
+      }
+
+      // Nova workspaces are isolated from legacy Aether chat sessions.
+      match /novaSessions/{sessionId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // RAG Knowledge Base Documents
+      match /ragDocuments/{docId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // RAG Semantic Chunks
+      match /ragChunks/{chunkId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Artifacts
+      match /artifacts/{artifactId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+  }
+}
