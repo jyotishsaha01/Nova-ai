@@ -672,3 +672,34 @@ body { background: var(--nova-paper); color: var(--nova-ink); }
 .scene-ocean b { z-index:4; bottom:15%; border-color:rgba(204,255,255,.75); box-shadow:0 0 14px rgba(122,242,238,.55); }
 .scene-ocean span { z-index:4; background:radial-gradient(circle at 36% 25%,rgba(193,255,247,.9),rgba(29,200,207,.72) 42%,rgba(6,80,115,.8) 75%); box-shadow:0 0 36px rgba(91,250,233,.65); }
 @keyframes surface-shimmer { to { opacity:.72; transform:translateY(3px) scaleX(1.015); } }
+
+/* Agent run timeline: readable in both light workspaces and dark visual themes. */
+.nova-shell .nova-agent-activity { color:#243249; background:rgba(255,255,255,.97); border-color:#cbd5e1; box-shadow:0 8px 24px rgba(31,48,78,.08); }
+.nova-agent-activity__toggle { color:inherit; transition:background-color .16s ease; }
+.nova-agent-activity__toggle:hover { background:rgba(49,92,255,.06); }
+.nova-agent-activity__toggle:focus-visible { outline:2px solid #315cff; outline-offset:-2px; }
+.nova-agent-activity__icon { color:#4338a8; background:#eeebff; }
+.nova-agent-activity__title { color:#182840; }
+.nova-agent-activity__summary, .nova-agent-activity__detail { color:#526176; }
+.nova-agent-activity__status { color:#475569; }
+.nova-agent-activity__status--running, .nova-agent-activity__step--running, .nova-agent-activity__marker--running { color:#4338a8; }
+.nova-agent-activity__status--complete, .nova-agent-activity__step--completed, .nova-agent-activity__marker--completed { color:#166534; }
+.nova-agent-activity__status--failed, .nova-agent-activity__step--failed, .nova-agent-activity__marker--failed { color:#b42318; }
+.nova-agent-activity__status--pending, .nova-agent-activity__step--pending, .nova-agent-activity__marker--pending { color:#526176; }
+.nova-agent-activity__list { border-color:#dbe3ee; }
+.nova-agent-activity__connector { background:#cbd5e1; }
+.nova-agent-activity__marker { background:#fff; }
+.nova-theme-nebula .nova-agent-activity, .nova-theme-midnight .nova-agent-activity { color:#e8eef9; background:rgba(17,27,45,.97); border-color:#40516b; box-shadow:0 10px 30px rgba(0,0,0,.22); }
+.nova-theme-nebula .nova-agent-activity__title, .nova-theme-midnight .nova-agent-activity__title { color:#f3f6ff; }
+.nova-theme-nebula .nova-agent-activity__summary, .nova-theme-nebula .nova-agent-activity__detail, .nova-theme-midnight .nova-agent-activity__summary, .nova-theme-midnight .nova-agent-activity__detail { color:#c0ccde; }
+.nova-theme-nebula .nova-agent-activity__status, .nova-theme-midnight .nova-agent-activity__status { color:#c0ccde; }
+.nova-theme-nebula .nova-agent-activity__icon, .nova-theme-midnight .nova-agent-activity__icon { color:#c4b5fd; background:#292454; }
+.nova-theme-nebula .nova-agent-activity__status--running, .nova-theme-nebula .nova-agent-activity__step--running, .nova-theme-nebula .nova-agent-activity__marker--running, .nova-theme-midnight .nova-agent-activity__status--running, .nova-theme-midnight .nova-agent-activity__step--running, .nova-theme-midnight .nova-agent-activity__marker--running { color:#c7d2fe; }
+.nova-theme-nebula .nova-agent-activity__status--complete, .nova-theme-nebula .nova-agent-activity__step--completed, .nova-theme-nebula .nova-agent-activity__marker--completed, .nova-theme-midnight .nova-agent-activity__status--complete, .nova-theme-midnight .nova-agent-activity__step--completed, .nova-theme-midnight .nova-agent-activity__marker--completed { color:#86efac; }
+.nova-theme-nebula .nova-agent-activity__status--failed, .nova-theme-nebula .nova-agent-activity__step--failed, .nova-theme-nebula .nova-agent-activity__marker--failed, .nova-theme-midnight .nova-agent-activity__status--failed, .nova-theme-midnight .nova-agent-activity__step--failed, .nova-theme-midnight .nova-agent-activity__marker--failed { color:#fda4af; }
+.nova-theme-nebula .nova-agent-activity__status--pending, .nova-theme-nebula .nova-agent-activity__step--pending, .nova-theme-nebula .nova-agent-activity__marker--pending, .nova-theme-midnight .nova-agent-activity__status--pending, .nova-theme-midnight .nova-agent-activity__step--pending, .nova-theme-midnight .nova-agent-activity__marker--pending { color:#b1bfd4; }
+.nova-theme-nebula .nova-agent-activity__list, .nova-theme-midnight .nova-agent-activity__list { border-color:#34445f; }
+.nova-theme-nebula .nova-agent-activity__connector, .nova-theme-midnight .nova-agent-activity__connector { background:#52627c; }
+.nova-theme-nebula .nova-agent-activity__marker, .nova-theme-midnight .nova-agent-activity__marker { background:#111b2d; }
+.nova-theme-nebula .nova-agent-activity__toggle:hover, .nova-theme-midnight .nova-agent-activity__toggle:hover { background:rgba(169,187,255,.09); }
+.nova-theme-nebula .nova-agent-activity__toggle:focus-visible, .nova-theme-midnight .nova-agent-activity__toggle:focus-visible { outline-color:#a8b9ff; }

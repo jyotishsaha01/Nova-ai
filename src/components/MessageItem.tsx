@@ -12,6 +12,7 @@ import {
 import { Message, Artifact } from "../types";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { ThinkingInspector } from "./ThinkingInspector";
+import { AgentActivity } from "./AgentActivity";
 import { GroundingCitations } from "./GroundingCitations";
 
 interface MessageItemProps {
@@ -151,10 +152,10 @@ export const MessageItem: React.FC<MessageItemProps> = ({
 
           {/* Assistant Thinking / Reasoning Inspector */}
           {!isUser && (
-            <ThinkingInspector
-              thoughtText={message.thought}
-              isStreaming={message.isStreaming}
-            />
+            message.toolCalls?.length ? <AgentActivity steps={message.toolCalls} /> : <ThinkingInspector
+                thoughtText={message.thought}
+                isStreaming={message.isStreaming}
+              />
           )}
 
           {/* Message Body */}

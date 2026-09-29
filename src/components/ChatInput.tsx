@@ -8,6 +8,7 @@ import {
   X,
   FileCode,
   StopCircle,
+  Bot,
 } from "lucide-react";
 import { ChatAttachment } from "../types";
 
@@ -17,6 +18,8 @@ interface ChatInputProps {
   onStopGeneration?: () => void;
   enableSearch: boolean;
   onToggleSearch: () => void;
+  agenticMode: boolean;
+  onToggleAgenticMode: () => void;
 }
 
 export const ChatInput: React.FC<ChatInputProps> = ({
@@ -25,6 +28,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   onStopGeneration,
   enableSearch,
   onToggleSearch,
+  agenticMode,
+  onToggleAgenticMode,
 }) => {
   const [content, setContent] = useState("");
   const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
@@ -203,7 +208,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Nova anything — compare models, research, write, or create"
+            placeholder={agenticMode ? "Describe a task — Nova will plan the work and show each step" : "Ask Nova anything — compare models, research, write, or create"}
             rows={1}
             className="w-full pt-3.5 pb-2 px-4 bg-transparent text-zinc-100 placeholder-zinc-500 text-sm focus:outline-none resize-none leading-relaxed max-h-56 select-text"
           />
@@ -243,6 +248,22 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                 {enableSearch && (
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
                 )}
+              </button>
+
+              <button
+                type="button"
+                onClick={onToggleAgenticMode}
+                aria-pressed={agenticMode}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                  agenticMode
+                    ? "bg-violet-500/15 border-violet-400/40 text-violet-200 shadow-xs"
+                    : "bg-zinc-900/60 border-zinc-800/80 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-850"
+                }`}
+                title="Plan and execute a bounded multi-step run with visible progress"
+              >
+                <Bot className="w-3.5 h-3.5" />
+                <span>Agent</span>
+                {agenticMode && <span className="w-1.5 h-1.5 rounded-full bg-violet-300 animate-pulse" />}
               </button>
 
               {/* Voice Dictation with Animated Waves */}

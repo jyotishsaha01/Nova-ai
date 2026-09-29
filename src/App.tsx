@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Message, ChatSession, Artifact, AgentMode, ChatAttachment, AnimatedTheme } from "./types";
+import { Message, ChatSession, Artifact, AgentMode, ChatAttachment, AnimatedTheme, ToolCallItem } from "./types";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { MessageItem } from "./components/MessageItem";
@@ -162,6 +162,11 @@ function MainStudio() {
   const [thinkingLevel, setThinkingLevel] = useState<"MINIMAL" | "LOW" | "HIGH">("LOW");
   const [customSystemPrompt, setCustomSystemPrompt] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [agenticMode, setAgenticMode] = useState<boolean>(() => localStorage.getItem("nova_agentic_mode") === "true");
+  const handleToggleAgenticMode = () => setAgenticMode((previous) => {
+    localStorage.setItem("nova_agentic_mode", String(!previous));
+    return !previous;
+  });
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -264,6 +269,7 @@ function MainStudio() {
   const handleSendMessage = async (content: string, attachments: ChatAttachment[]) => {
     if (!content.trim() && attachments.length === 0) return;
     if (!activeSession) return;
+    const useAgenticRun = agenticMode && attachments.length === 0;
 
     const userMessage: Message = {
       id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -309,6 +315,7 @@ function MainStudio() {
 
     let streamedText = "";
     let capturedGrounding: any = null;
+    let capturedToolCalls: ToolCallItem[] = [];
 
     try {
       let ragContext: Array<{ docTitle: string; chunkText: string; similarityScore: number }> = [];
@@ -329,7 +336,7 @@ function MainStudio() {
           attachments: m.attachments,
         }));
 
-      const response = await fetch("/api/chat/stream", {
+      const response = await fetch(useAgenticRun ? "/api/agent/run" : "/api/chat/stream", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -343,6 +350,7 @@ function MainStudio() {
           enableMaps,
           thinkingLevel,
           ragContext,
+          agentic: useAgenticRun,
         }),
         signal: controller.signal,
       });
@@ -374,6 +382,16 @@ function MainStudio() {
           try {
             const data = JSON.parse(jsonStr);
 
+            if (Array.isArray(data.agentPlan)) {
+              capturedToolCalls = data.agentPlan as ToolCallItem[];
+            }
+
+            if (data.agentStep && Number.isInteger(data.agentStep.index)) {
+              capturedToolCalls = capturedToolCalls.map((item, index) => index === data.agentStep.index
+                ? { ...item, ...data.agentStep }
+                : item);
+            }
+
             if (data.notice) streamedText += `*${data.notice}*\n\n`;
 
             if (data.error) {
@@ -402,6 +420,7 @@ function MainStudio() {
                       ? {
                           ...m,
                           content: streamedText,
+                          toolCalls: capturedToolCalls.length ? capturedToolCalls : m.toolCalls,
                           groundingMetadata: capturedGrounding || m.groundingMetadata,
                           isStreaming: true,
                         }
@@ -435,6 +454,7 @@ function MainStudio() {
                 ? {
                     ...m,
                     content: streamedText || "I have processed your request.",
+                    toolCalls: capturedToolCalls.length ? capturedToolCalls : m.toolCalls,
                     groundingMetadata: capturedGrounding,
                     isStreaming: false,
                   }
@@ -581,6 +601,8 @@ function MainStudio() {
               onStopGeneration={handleStopGeneration}
               enableSearch={enableSearch}
               onToggleSearch={() => setEnableSearch(!enableSearch)}
+              agenticMode={agenticMode}
+              onToggleAgenticMode={handleToggleAgenticMode}
             />
           </div>
 
